@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { useSelector, useDispatch } from 'react-redux'
 
 const decodeHTML = function (html) {
@@ -29,6 +30,7 @@ function Question() {
     setQuestions(decodedQuestions)
   }, [encodedQuestions])
   const questionIndex = useSelector((state) => state.index)
+  const isDone = useSelector((state) => state.isDone)
 
   const dispatch = useDispatch()
 
@@ -71,20 +73,26 @@ function Question() {
         })
       }, 2500)
     }
-  }
+  };
 
-  /*
-    {
-      "category": "Entertainment: Video Games",
-      "type": "boolean",
-      "difficulty": "easy",
-      "question": "Peter Molyneux was the founder of Bullfrog Productions.",
-      "correct_answer": "True",
-      "incorrect_answers": [
-        "False"
-      ]
+
+  const renderTime = ({ remainingTime }) => {
+    if (remainingTime === 0) {
+      dispatch({
+        type: 'SET_IS_DONE',
+        isDone: true,
+      })
+      return <div className="timer">Too lale...</div>;
     }
-  */
+
+    return (
+        <div className="timer">
+          <div className="text">Remaining</div>
+          <div className="value">{remainingTime}</div>
+          <div className="text">seconds</div>
+        </div>
+    );
+  };
 
   const getClass = option => {
     if (!answerSelected) {
@@ -105,7 +113,20 @@ function Question() {
   }
 
   return (
+
     <div>
+      <div>
+        <CountdownCircleTimer
+            isPlaying
+            duration={10}
+            colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+            colorsTime={[10, 6, 3, 0]}
+            onComplete={() => (
+                { shouldRepeat: false, delay: 1 })}
+        >
+          {renderTime}
+        </CountdownCircleTimer>
+      </div>
       <p>Question {questionIndex + 1}</p>
       <h3>{question.question}</h3>
       <ul>
@@ -116,7 +137,7 @@ function Question() {
         ))}
       </ul>
       <div>
-        Score: {score} / {questions.length}
+        Score: {score}
       </div>
     </div>
   )

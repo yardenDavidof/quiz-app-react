@@ -1,23 +1,22 @@
 import { useSelector } from 'react-redux'
 
-import Settings from './Components/Settings'
 import Question from './Components/Question'
 import FinalScreen from './Components/FinalScreen'
-
+import WelcomeScreen from "./Components/WelcomeScreen";
 import './App.css'
 
 function App() {
   const questions = useSelector((state) => state.questions)
   const questionIndex = useSelector((state) => state.index)
+  const isDone = useSelector((state) => state.isDone)
 
   let component
-
-  if (questions.length && questionIndex + 1 <= questions.length) {
-    component = <Question />
-  } else if (!questions.length) {
-    component = <Settings />
-  } else {
+  if (isDone){
     component = <FinalScreen />
+  } else if (questions.length && questionIndex + 1 <= questions.length) {
+    component = <Question />
+  } else {
+    component = <WelcomeScreen />
   }
 
   return (

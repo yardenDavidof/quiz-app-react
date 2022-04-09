@@ -9,6 +9,7 @@ const initState = {
   questions: [],
   index: 0,
   score: 0,
+  r: 60,
 }
 
 const Reducer = (state = initState, action) => {
@@ -68,6 +69,12 @@ const Reducer = (state = initState, action) => {
       return {
         ...state,
         index: action.index,
+      }
+
+    case 'SET_IS_DONE':
+      return {
+        ...state,
+        isDone: action.isDone,
       }
 
     case 'SET_SCORE':
